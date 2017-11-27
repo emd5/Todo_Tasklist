@@ -1,0 +1,19 @@
+.root{
+    -fx-background-color: fuchsia;
+    -fx-alignment: center;
+}
+
+
+#main-frame{
+    -fx-background-color: darksalmon;
+    -fx-alignment: center;
+}
+
+#title{
+    -fx-font: 300;
+    -fx-alignment: center;
+}
+
+#next-button{
+    -fx-alignment: center;
+}
