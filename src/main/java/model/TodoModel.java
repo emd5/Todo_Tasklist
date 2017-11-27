@@ -2,11 +2,9 @@
  *11/20/17
  *TodoModel.java
  */
-
 package model;
 
 import java.util.*;
-
 
 /**
  * This class supports the CRUD operations
@@ -29,34 +27,50 @@ public class TodoModel{
 
     //get unmodafiable list
     public Collection<Todo> getTodoList(){
+
         return Collections.unmodifiableCollection(todo);
     }
 
     //update a task
-    public void updateTodo(final int id){
+    public void updateTodo(final UUID id, final String newMessage){
 
-        for(Todo uuid : todo) {
-            if(uuid.getId()==id ) {
-                todo.remove(id);
+        try{
+            for(Todo uuid : todo) {
+                if(uuid.getId()==id ) {
+                    todo.remove(id);
+
+                    Todo newTask = new Todo(newMessage, getUUID());
+                    todo.add(newTask);
+                }
+                else {
+                    throw new MissingRecordException();
+                }
             }
+        }
+        catch(MissingRecordException e) {
+            e.printStackTrace();
         }
     }
 
-    //delete a task
-    public void deleteTodo(final int id){
+    private UUID getUUID(){
+        UUID newId = UUID.randomUUID();
+        return newId;
+    }
 
-        for(Todo uuid : todo){
-            try{
-                if(uuid.getId()== id){
+    //delete a task
+    public void deleteTodo(final UUID id){
+        try {
+            for(Todo uuid : todo) {
+                if(uuid.getId() == id) {
                     todo.remove(id);
                 }
                 else {
                     throw new MissingRecordException();
                 }
             }
-            catch(MissingRecordException e) {
-                e.printStackTrace();
-            }
+        }
+        catch(MissingRecordException e) {
+            e.printStackTrace();
         }
     }
 
@@ -64,8 +78,6 @@ public class TodoModel{
     public int size(){
         return todo.size();
     }
-
-
 
         private class MissingRecordException extends Throwable {
 

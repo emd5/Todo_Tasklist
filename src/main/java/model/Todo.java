@@ -14,20 +14,16 @@ import java.util.*;
 public class Todo {
 
     private final String taskMessage;
-    private final int id;
+    private UUID id;
 
-    public Todo(final String taskMessage, final int id) {
+    //a task that already has been generated
+    public Todo(final String taskMessage, final UUID id) {
         this.taskMessage = taskMessage;
         this.id = id;
     }
 
-    public int getId(){
-        return id;
-    }
-
-    public UUID setId(){
-        UUID id = UUID.randomUUID();
-        return id;
+    public UUID getId(){
+        return id = UUID.randomUUID();
     }
 
     public String getTask(){
