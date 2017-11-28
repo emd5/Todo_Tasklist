@@ -23,10 +23,12 @@ public class Todo {
     }
 
     public UUID getId(){
-        return id = UUID.randomUUID();
+
+        return id;
     }
 
     public String getTask(){
+
         return taskMessage;
     }
 

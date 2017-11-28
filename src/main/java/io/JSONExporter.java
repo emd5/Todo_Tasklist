@@ -14,7 +14,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-
+/**
+ * This class accepts a list of todo task and
+ * @author Liz Mahoney
+ * @version 1.0
+ */
 public class JSONExporter {
 
     /**
@@ -39,6 +43,7 @@ public class JSONExporter {
             String stringJson = gson.toJson(todoArray);
             fileWriter.write(stringJson);
             fileWriter.close();
+            return true;
         }
         catch(IOException e) {
             e.printStackTrace();

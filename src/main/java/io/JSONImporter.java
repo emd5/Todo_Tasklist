@@ -13,6 +13,8 @@ import model.TodoModel;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Liz Mahoney
@@ -20,16 +22,17 @@ import java.io.IOException;
  */
 public class JSONImporter {
 
-    public boolean importTaskList(TodoModel todoList){
+    public List<Todo> importTaskList(){
+
+        List<Todo> todoList = null;
         FileReader fileReader = null;
         Gson gson = new Gson();
         try {
             fileReader = new FileReader("todo.json");
             Todo[] task = gson.fromJson(fileReader, Todo[].class);
 
-            for(int i = 0; i<task.length; i++){
-                todoList.addTodoList(task[i]);
-            }
+            todoList = Arrays.asList(task);
+
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
@@ -47,7 +50,7 @@ public class JSONImporter {
                 e.printStackTrace();
             }
         }
-        return false;
+        return todoList;
     }
 
 }

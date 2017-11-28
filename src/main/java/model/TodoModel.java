@@ -4,6 +4,10 @@
  */
 package model;
 
+import com.google.common.collect.Lists;
+import io.JSONExporter;
+import io.JSONImporter;
+
 import java.util.*;
 
 /**
@@ -14,37 +18,50 @@ import java.util.*;
  */
 public class TodoModel{
 
-    private static List<Todo> todo;
+    private static JSONExporter exporter;
+    private static JSONImporter importer;
 
-    public TodoModel(){
-        todo = new ArrayList<>();
+    private static Map<UUID,Todo> todoMap;
+
+    public TodoModel() {
+        exporter = new JSONExporter();
+        importer = new JSONImporter();
     }
 
     //add tasks list object
-    public void addTodoList(final Todo tasks){
-        todo.add(tasks);
+    public void addTodo(final String task){
+
+        final List<Todo> todos = Lists.newArrayList(todoMap.values());
+        UUID newID = createNewUUID();
+        todoMap.put(newID, new Todo(task, newID));
+        exporter.exportTaskList(todos);
+
+
     }
 
-    //get unmodafiable list
-    public Collection<Todo> getTodoList(){
+    //get all todos
+    public List<Todo> getTodoList(){
 
-        return Collections.unmodifiableCollection(todo);
+        todoMap = new HashMap<>();
+        List<Todo> getTaskList = importer.importTaskList();
+
+        for(Todo todo: getTaskList){
+            todoMap.put(todo.getId(), todo);
+        }
+
+        return getTaskList;
     }
 
     //update a task
     public void updateTodo(final UUID id, final String newMessage){
 
         try{
-            for(Todo uuid : todo) {
-                if(uuid.getId()==id ) {
-                    todo.remove(id);
+            if(todoMap.containsKey(id)){
 
-                    Todo newTask = new Todo(newMessage, getUUID());
-                    todo.add(newTask);
-                }
-                else {
-                    throw new MissingRecordException();
-                }
+                todoMap.replace(id, new Todo(newMessage, id));
+            }
+            else {
+                throw new MissingRecordException("No Task found");
             }
         }
         catch(MissingRecordException e) {
@@ -52,21 +69,21 @@ public class TodoModel{
         }
     }
 
-    private UUID getUUID(){
+    private UUID createNewUUID(){
+
         UUID newId = UUID.randomUUID();
+
         return newId;
     }
 
     //delete a task
     public void deleteTodo(final UUID id){
-        try {
-            for(Todo uuid : todo) {
-                if(uuid.getId() == id) {
-                    todo.remove(id);
-                }
-                else {
-                    throw new MissingRecordException();
-                }
+        try{
+            if(todoMap.containsKey(id)){
+                todoMap.remove(id);
+            }
+            else {
+                throw new MissingRecordException("No Task found");
             }
         }
         catch(MissingRecordException e) {
@@ -75,12 +92,14 @@ public class TodoModel{
     }
 
     //size of the list
-    public int size(){
-        return todo.size();
+    public int size() {
+        return todoMap.size();
     }
 
-        private class MissingRecordException extends Throwable {
+        private class MissingRecordException extends Exception {
 
-
+            public MissingRecordException(String message){
+                super(message);
+            }
         }
 }
