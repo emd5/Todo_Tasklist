@@ -11,11 +11,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -46,27 +46,32 @@ public class TodoView extends Application implements Observer {
 
     @Override
     public void start(Stage stage) {
+
         todoList = todoController.getTaskList();
 
         this.stage = stage;
         stage.setTitle("Task List");
-        stage.setScene(getWelcomeScene(0));
+
+        stage.setScene(getWelcomeScene( 0));
         stage.show();
         todoController.addObserver(this);
-
-
     }
 
     private Scene getWelcomeScene(int page){
 
         VBox childFrame = new VBox();
-        childFrame.setAlignment(Pos.CENTER);
+        childFrame.setId("child-frame");
+
         Text title = getTitle(page);
+        title.setId("title");
         Text taskText = new Text("You have " + todoList.size() + " unfinished" +
                 " tasks");
+        taskText.setId("contentMessage");
         Button button = createButton(page);
+        button.setId("button");
 
-        ImageView imageView = getNoteBookImage();
+        Image imageNotebook = getNoteBookImage();
+        ImageView imageView = new ImageView(imageNotebook);
 
         childFrame.getChildren().addAll(title,taskText, button, imageView);
         childFrame.getStylesheets().addAll("css/todo.css");
@@ -74,16 +79,25 @@ public class TodoView extends Application implements Observer {
         return new Scene(childFrame, WINDOW_WIDTH,WINDOW_HEIGHT);
     }
 
+    private Image getNoteBookImage(){
+
+        return new Image("image/tasks.png", 150,150, true, true);
+    }
+
     private Scene getAddTaskScene( int page){
 
         VBox childFrame = new VBox();
+        childFrame.setId("child-frame");
 
         Text title = getTitle(page);
+        title.setId("title");
+
         TextArea textArea = new TextArea();
-        textArea.setWrapText(true);
-        textArea.setPrefSize(20,50);
+        textArea.setId("textarea");
 
         Button taskButton = createButton(page);
+        taskButton.setId("button");
+
         taskButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -97,24 +111,33 @@ public class TodoView extends Application implements Observer {
 
         childFrame.getChildren().addAll(title, textArea, taskButton);
         childFrame.getStylesheets().addAll("css/todo.css");
+
         return new Scene(childFrame, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     private Scene getTaskListScene(int page){
 
         VBox childFrame = new VBox();
-        childFrame.setAlignment(Pos.CENTER);
+        childFrame.setId("child-frame");
+
         HBox hBox = new HBox();
+        hBox.setId("taskListHbox");
+
         Text title = getTitle(page);
+        title.setId("title");
+
         Button addTaskButton = createButton(page);
+        addTaskButton.setId("addTaskButton");
 
         hBox.getChildren().addAll(title, addTaskButton);
 
         VBox verticalCheckBox = getCheckBoxes(page);
+        verticalCheckBox.setId("vertical-checkbox");
 
         childFrame.getChildren().addAll(hBox, verticalCheckBox);
 
         childFrame.getStylesheets().addAll("css/todo.css");
+
         return new Scene(childFrame, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
@@ -145,42 +168,48 @@ public class TodoView extends Application implements Observer {
         return button;
     }
 
-    private ImageView getNoteBookImage(){
 
-        return new ImageView("image/tasks.png");
-    }
 
     private VBox getCheckBoxes(int page){
+
         VBox verticalCheckBox = new VBox();
+        verticalCheckBox.setId("vertical-checkbox");
         Text text = null;
 
         if(todoList.isEmpty()){
              text = new Text("There are no tasks currently. Add a task by" +
                     " clicking the + button above");
-            verticalCheckBox.getChildren().add(text);
+             text.setId("noTaskMessage");
+
+             verticalCheckBox.getChildren().add(text);
         }
         else{
-
             CheckBox[] boxes = new CheckBox[todoList.size()];
 
             for(int i=0;i < todoList.size();i++){
                 CheckBox checkBox = new CheckBox(todoList.get(i).getTask());
                 boxes[i] = checkBox;
+
+                checkBox.setId("padding10");
+
             }
 
             //event handling on checkboxes
             for(int i=0; i<boxes.length; i++){
                 final CheckBox box = boxes[i];
                 final Todo todo = todoList.get(i);
-                box.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                box.selectedProperty()
+                        .addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    public void changed(ObservableValue<? extends Boolean>
+                        observable, Boolean oldValue, Boolean newValue) {
                        todoController.removeTask(todo.getId());
                         stage.setScene(getTaskListScene(page));
                     }
                 });
 
             }
+
             verticalCheckBox.getChildren().addAll(boxes);
         }
 
@@ -191,7 +220,6 @@ public class TodoView extends Application implements Observer {
 
         return new Text(titles[page]);
     }
-
 
     /**
      * This method overrides any changes to the todolist.
