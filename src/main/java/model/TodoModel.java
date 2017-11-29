@@ -16,7 +16,7 @@ import java.util.*;
  * @author Liz Mahoney
  * @version 1.0
  */
-public class TodoModel{
+public class TodoModel extends Observable{
 
     private static JSONExporter exporter;
     private static JSONImporter importer;
@@ -28,18 +28,28 @@ public class TodoModel{
         importer = new JSONImporter();
     }
 
-    //add tasks list object
+    /**
+     * This method adds a new task
+     *
+     * @param task a new message
+     */
     public void addTodo(final String task){
 
-        final List<Todo> todos = Lists.newArrayList(todoMap.values());
         UUID newID = createNewUUID();
         todoMap.put(newID, new Todo(task, newID));
+
+        final List<Todo> todos = Lists.newArrayList(todoMap.values());
         exporter.exportTaskList(todos);
 
-
+        this.setChanged();
+        this.notifyObservers(todos);
     }
 
-    //get all todos
+    /**
+     * This method grabs a list of task.
+     *
+     *  @return the tasklist
+     */
     public List<Todo> getTodoList(){
 
         todoMap = new HashMap<>();
@@ -52,13 +62,47 @@ public class TodoModel{
         return getTaskList;
     }
 
-    //update a task
+    /**
+     * This method updates a todotask
+     *
+     * @param id the id of the message
+     * @param newMessage a new updated message
+     */
     public void updateTodo(final UUID id, final String newMessage){
-
+        final List<Todo> todos = Lists.newArrayList(todoMap.values());
         try{
             if(todoMap.containsKey(id)){
 
                 todoMap.replace(id, new Todo(newMessage, id));
+                exporter.exportTaskList(todos);
+
+                this.setChanged();
+                this.notifyObservers(todos);
+            }
+            else {
+                throw new MissingRecordException("No Task found");
+            }
+        }
+        catch(MissingRecordException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method deletes a task
+     *
+     * @param id the UUID of the message
+     */
+    public void deleteTodo(final UUID id){
+        final List<Todo> todos = Lists.newArrayList(todoMap.values());
+
+        try{
+            if(todoMap.containsKey(id)){
+                todoMap.remove(id);
+                exporter.exportTaskList(todos);
+
+                this.setChanged();
+                this.notifyObservers(todos);
             }
             else {
                 throw new MissingRecordException("No Task found");
@@ -76,30 +120,15 @@ public class TodoModel{
         return newId;
     }
 
-    //delete a task
-    public void deleteTodo(final UUID id){
-        try{
-            if(todoMap.containsKey(id)){
-                todoMap.remove(id);
-            }
-            else {
-                throw new MissingRecordException("No Task found");
-            }
-        }
-        catch(MissingRecordException e) {
-            e.printStackTrace();
-        }
-    }
+   public int size() {
 
-    //size of the list
-    public int size() {
         return todoMap.size();
     }
 
-        private class MissingRecordException extends Exception {
+    private class MissingRecordException extends Exception {
 
-            public MissingRecordException(String message){
-                super(message);
-            }
+        public MissingRecordException(String message){
+            super(message);
         }
+    }
 }
