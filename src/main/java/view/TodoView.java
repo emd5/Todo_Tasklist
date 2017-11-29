@@ -131,10 +131,24 @@ public class TodoView extends Application implements Observer {
 
         hBox.getChildren().addAll(title, addTaskButton);
 
-        VBox verticalCheckBox = getCheckBoxes(page);
-        verticalCheckBox.setId("vertical-checkbox");
+        VBox verticalCheckbox;
 
-        childFrame.getChildren().addAll(hBox, verticalCheckBox);
+        if(todoList.isEmpty()){
+            verticalCheckbox = new VBox();
+            verticalCheckbox.setId("vertical-checkbox");
+            Text text = new Text("There are no tasks currently. Add a task by" +
+                    " clicking the + button above");
+            text.setId("contentMessage");
+
+            verticalCheckbox.getChildren().addAll(text);
+            childFrame.getChildren().addAll(hBox,verticalCheckbox);
+        }
+        else {
+            VBox verticalCheckBox = getCheckBoxes(page);
+            verticalCheckBox.setId("vertical-checkbox");
+
+            childFrame.getChildren().addAll(hBox, verticalCheckBox);
+        }
 
         childFrame.getStylesheets().addAll("css/todo.css");
 
@@ -173,43 +187,32 @@ public class TodoView extends Application implements Observer {
     private VBox getCheckBoxes(int page){
 
         VBox verticalCheckBox = new VBox();
-        verticalCheckBox.setId("vertical-checkbox");
+
         Text text = null;
 
-        if(todoList.isEmpty()){
-             text = new Text("There are no tasks currently. Add a task by" +
-                    " clicking the + button above");
-             text.setId("noTaskMessage");
+        CheckBox[] boxes = new CheckBox[todoList.size()];
 
-             verticalCheckBox.getChildren().add(text);
+        for(int i=0;i < todoList.size();i++){
+            CheckBox checkBox = new CheckBox(todoList.get(i).getTask());
+            boxes[i] = checkBox;
+
+            checkBox.setId("padding10");
+
         }
-        else{
-            CheckBox[] boxes = new CheckBox[todoList.size()];
 
-            for(int i=0;i < todoList.size();i++){
-                CheckBox checkBox = new CheckBox(todoList.get(i).getTask());
-                boxes[i] = checkBox;
-
-                checkBox.setId("padding10");
-
-            }
-
-            //event handling on checkboxes
-            for(int i=0; i<boxes.length; i++){
-                final CheckBox box = boxes[i];
-                final Todo todo = todoList.get(i);
-                box.selectedProperty()
-                        .addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean>
-                        observable, Boolean oldValue, Boolean newValue) {
-                       todoController.removeTask(todo.getId());
-                        stage.setScene(getTaskListScene(page));
-                    }
-                });
-
-            }
-
+        //event handling on checkboxes
+        for(int i=0; i<boxes.length; i++){
+            final CheckBox box = boxes[i];
+            final Todo todo = todoList.get(i);
+            box.selectedProperty()
+                    .addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean>
+                    observable, Boolean oldValue, Boolean newValue) {
+                   todoController.removeTask(todo.getId());
+                    stage.setScene(getTaskListScene(page));
+                }
+            });
             verticalCheckBox.getChildren().addAll(boxes);
         }
 

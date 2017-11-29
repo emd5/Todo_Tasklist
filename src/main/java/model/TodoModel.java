@@ -94,6 +94,7 @@ public class TodoModel extends Observable{
      * @param id the UUID of the message
      */
     public void deleteTodo(final UUID id){
+
         final List<Todo> todos = Lists.newArrayList(todoMap.values());
 
         try{
@@ -105,6 +106,9 @@ public class TodoModel extends Observable{
                 this.notifyObservers(todos);
             }
             else {
+                this.setChanged();
+                this.notifyObservers(todos);
+
                 throw new MissingRecordException("No Task found");
             }
         }
@@ -128,6 +132,7 @@ public class TodoModel extends Observable{
     private class MissingRecordException extends Exception {
 
         public MissingRecordException(String message){
+
             super(message);
         }
     }
