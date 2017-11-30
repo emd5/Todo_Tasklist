@@ -29,8 +29,16 @@
 }
 
 #button{
-     -fx-pref-width: 100px;
-     -fx-alignment: center;
+    -fx-background-color: linear-gradient(#f2f2f2, #63d67c),
+    linear-gradient(#fcfcfc 0%, #d3d98d 20%, #d69688 100%),
+    linear-gradient(#dddddd 0%, #e4f699 50%);
+
+    -fx-background-insets: 0, 1, 2;
+    -fx-text-fill: black;
+    -fx-font-size: 20px;
+    -fx-padding: 10px;
+    -fx-pref-width: 100px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
  }
 
 #addTaskButton{
