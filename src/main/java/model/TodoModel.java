@@ -100,15 +100,11 @@ public class TodoModel extends Observable{
         try{
             if(todoMap.containsKey(id)){
                 todoMap.remove(id);
-                exporter.exportTaskList(todos);
-
                 this.setChanged();
                 this.notifyObservers(todos);
+                exporter.exportTaskList(todos);
             }
             else {
-                this.setChanged();
-                this.notifyObservers(todos);
-
                 throw new MissingRecordException("No Task found");
             }
         }

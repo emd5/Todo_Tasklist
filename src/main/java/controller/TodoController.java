@@ -53,10 +53,10 @@ public class TodoController {
     /**
      * This method removes a task
      *
-     * @param uuid the id of the task
+     * @param findID the id of the task
      */
-    public void removeTask(UUID uuid){
-        todo.deleteTodo(uuid);
+    public void removeTask(UUID findID){
+        todo.deleteTodo(findID);
     }
 
     /**

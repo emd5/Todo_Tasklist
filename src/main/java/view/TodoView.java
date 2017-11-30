@@ -35,6 +35,13 @@ public class TodoView extends Application implements Observer {
 
     private static final int WINDOW_WIDTH = 300;
     private static final int WINDOW_HEIGHT = 400;
+    public static final int TEXT_WRAPPING_WIDTH = 100;
+    public static final int IMAGE_WIDTH = 150;
+
+    public static final String NOTASK_TEXT = "There are no tasks currently. Add a task by" +
+            " clicking the + button above";
+    public static final String FILE = "css/todo.css";
+    public static final int IMAGE_HEIGHT = 150;
 
     private static  String[] titles = new String[]{"Welcome","Tasks","Add New Task"};
     private static  String[] buttonLabels = new String[] {"View", "+", "Finish"};
@@ -64,8 +71,8 @@ public class TodoView extends Application implements Observer {
 
         Text title = getTitle(page);
         title.setId("title");
-        Text taskText = new Text("You have " + todoList.size() + " unfinished" +
-                " tasks");
+        Text taskText = new Text
+                ("You have " + todoList.size() +" unfinished tasks");
         taskText.setId("contentMessage");
         Button button = createButton(page);
         button.setId("button");
@@ -81,7 +88,8 @@ public class TodoView extends Application implements Observer {
 
     private Image getNoteBookImage(){
 
-        return new Image("image/tasks.png", 150,150, true, true);
+        return new Image("image/tasks.png", IMAGE_WIDTH, IMAGE_HEIGHT,
+                true, true);
     }
 
     private Scene getAddTaskScene( int page){
@@ -110,7 +118,7 @@ public class TodoView extends Application implements Observer {
         });
 
         childFrame.getChildren().addAll(title, textArea, taskButton);
-        childFrame.getStylesheets().addAll("css/todo.css");
+        childFrame.getStylesheets().addAll(FILE);
 
         return new Scene(childFrame, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
@@ -136,9 +144,9 @@ public class TodoView extends Application implements Observer {
         if(todoList.isEmpty()){
             verticalCheckbox = new VBox();
             verticalCheckbox.setId("vertical-checkbox");
-            Text text = new Text("There are no tasks currently. Add a task by" +
-                    " clicking the + button above");
+            Text text = new Text(NOTASK_TEXT);
             text.setId("contentMessage");
+            text.setWrappingWidth(TEXT_WRAPPING_WIDTH);
 
             verticalCheckbox.getChildren().addAll(text);
             childFrame.getChildren().addAll(hBox,verticalCheckbox);
@@ -188,16 +196,12 @@ public class TodoView extends Application implements Observer {
 
         VBox verticalCheckBox = new VBox();
 
-        Text text = null;
-
         CheckBox[] boxes = new CheckBox[todoList.size()];
 
         for(int i=0;i < todoList.size();i++){
             CheckBox checkBox = new CheckBox(todoList.get(i).getTask());
             boxes[i] = checkBox;
-
             checkBox.setId("padding10");
-
         }
 
         //event handling on checkboxes
@@ -213,7 +217,7 @@ public class TodoView extends Application implements Observer {
                     stage.setScene(getTaskListScene(page));
                 }
             });
-            verticalCheckBox.getChildren().addAll(boxes);
+            verticalCheckBox.getChildren().addAll(boxes[i]);
         }
 
         return verticalCheckBox;
