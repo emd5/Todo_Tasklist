@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,7 +36,7 @@ public class TodoView extends Application implements Observer {
 
     private static final int WINDOW_WIDTH = 300;
     private static final int WINDOW_HEIGHT = 400;
-    public static final int TEXT_WRAPPING_WIDTH = 100;
+    public static final int TEXT_WRAPPING_WIDTH = 200;
     public static final int IMAGE_WIDTH = 150;
 
     public static final String NOTASK_TEXT = "There are no tasks currently. Add a task by" +
@@ -125,10 +126,11 @@ public class TodoView extends Application implements Observer {
 
     private Scene getTaskListScene(int page){
 
-        VBox childFrame = new VBox();
-        childFrame.setId("child-frame");
+        VBox taskListFrame = new VBox();
+        taskListFrame.setId("tasklist-frame");
 
-        HBox hBox = new HBox();
+        HBox hBox = new HBox(100);
+
         hBox.setId("taskListHbox");
 
         Text title = getTitle(page);
@@ -149,18 +151,19 @@ public class TodoView extends Application implements Observer {
             text.setWrappingWidth(TEXT_WRAPPING_WIDTH);
 
             verticalCheckbox.getChildren().addAll(text);
-            childFrame.getChildren().addAll(hBox,verticalCheckbox);
+            taskListFrame.getChildren().addAll(hBox,verticalCheckbox);
         }
         else {
+
             VBox verticalCheckBox = getCheckBoxes(page);
             verticalCheckBox.setId("vertical-checkbox");
 
-            childFrame.getChildren().addAll(hBox, verticalCheckBox);
+            taskListFrame.getChildren().addAll(hBox, verticalCheckBox);
         }
 
-        childFrame.getStylesheets().addAll("css/todo.css");
+        taskListFrame.getStylesheets().addAll("css/todo.css");
 
-        return new Scene(childFrame, WINDOW_WIDTH, WINDOW_HEIGHT);
+        return new Scene(taskListFrame, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     private Button createButton(int page) {
@@ -195,7 +198,6 @@ public class TodoView extends Application implements Observer {
     private VBox getCheckBoxes(int page){
 
         VBox verticalCheckBox = new VBox();
-
         CheckBox[] boxes = new CheckBox[todoList.size()];
 
         for(int i=0;i < todoList.size();i++){
@@ -213,7 +215,7 @@ public class TodoView extends Application implements Observer {
                 @Override
                 public void changed(ObservableValue<? extends Boolean>
                     observable, Boolean oldValue, Boolean newValue) {
-                   todoController.removeTask(todo.getId());
+                    todoController.removeTask(todo.getId());
                     stage.setScene(getTaskListScene(page));
                 }
             });

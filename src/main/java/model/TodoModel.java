@@ -95,17 +95,19 @@ public class TodoModel extends Observable{
      */
     public void deleteTodo(final UUID id){
 
-        final List<Todo> todos = Lists.newArrayList(todoMap.values());
+
 
         try{
             if(todoMap.containsKey(id)){
                 todoMap.remove(id);
+                final List<Todo> todos = Lists.newArrayList(todoMap.values());
+                exporter.exportTaskList(todos);
                 this.setChanged();
                 this.notifyObservers(todos);
-                exporter.exportTaskList(todos);
+
             }
             else {
-                throw new MissingRecordException("No Task found");
+                throw new MissingRecordException("Missing task");
             }
         }
         catch(MissingRecordException e) {

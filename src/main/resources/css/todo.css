@@ -2,32 +2,29 @@
 .root{
     -fx-background-image:url("../image/mosaicgreen.jpg") ;
     -fx-background-size: 300px 400px;
-    -fx-alignment: center;
+    -fx-alignment: top-center;
 }
 
 #child-frame{
-    /*-fx-background-color: #000000,*/
-    /*linear-gradient(#7ebcea, #338f41),*/
-    /*linear-gradient(#7cb775, #101075),*/
-    /*linear-gradient(#9d496f, #1c7a74);*/
-    /*-fx-background-insets: 0, 1, 2, 3;*/
-    /*-fx-background-radius: 3, 2, 2, 2;*/
-    /*-fx-background-image: url("image/clipboard.jpg");*/
-    /*-fx-background-size: contain;*/
-    /*-fx-alignment: top-center;*/
     -fx-padding: 10px;
     -fx-spacing: 10px;
 }
 
+#tasklist-frame{
+    -fx-pref-height: 200px;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
 
 #title{
-    -fx-font-size: 40px;
-    -fx-alignment: center;
-    -fx-font-family: sans-serif;
+
+    -fx-font-size: 30px;
+    -fx-alignment: top-center;
+    -fx-font-family: monospace;
 }
 
 #textarea{
-    -fx-padding: 10px;
+    -fx-padding: 5px;
     -fx-wrap-text: true;
 }
 
@@ -37,21 +34,23 @@
  }
 
 #addTaskButton{
-    -fx-background-color: linear-gradient(#f2f2f2, #d6d6d6),
-    linear-gradient(#fcfcfc 0%, #d3d98d 20%, #d65373 100%),
-    linear-gradient(#dddddd 0%, #f6f6f6 50%);
+    -fx-background-color: linear-gradient(#f2f2f2, #63d67c),
+    linear-gradient(#fcfcfc 0%, #d3d98d 20%, #d69688 100%),
+    linear-gradient(#dddddd 0%, #e4f699 50%);
 
     -fx-background-insets: 0, 1, 2;
     -fx-text-fill: black;
-    -fx-alignment: center-left;
+    -fx-font-size: 20px;
     -fx-padding: 10px;
+    -fx-pref-width: 100px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
 }
 
 #taskListHbox{
-    -fx-alignment: center;
+
+    -fx-padding: 10px;
     -fx-pref-width: 200px;
-    -fx-spacing: 100px;
+
 }
 
 #vertical-checkbox{
@@ -63,8 +62,9 @@
 
 #contentMessage{
     -fx-font-size: 15px;
-    -fx-font-family: fantasy;
+    -fx-font-family: monospace;
     -fx-padding: 10px;
+
 }
 
 #padding10{
